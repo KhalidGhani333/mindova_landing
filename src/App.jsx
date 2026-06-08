@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import mindovaLogo from './assets/mindova-logo-full.png'
 import './App.css'
 
@@ -16,18 +16,27 @@ const ArrowRight = () => (
 )
 
 export default function App() {
-  const [selected, setSelected] = useState(null)
-  const [email, setEmail] = useState('')
-  const [submitted, setSubmitted] = useState(false)
-  const [error, setError] = useState('')
+  const [selected, setSelected]       = useState(null)
+  const [activeModal, setActiveModal] = useState(null)
+  const [error, setError]             = useState('')
 
-  function handleSubmit(e) {
-    e.preventDefault()
-    if (!email.trim()) { setError('Please enter your email address.'); return }
-    if (!/\S+@\S+\.\S+/.test(email)) { setError('Please enter a valid email address.'); return }
-    if (!selected) { setError('Please select which option applies to you.'); return }
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.src = 'https://link.webtechs.dev/js/form_embed.js'
+    script.async = true
+    document.body.appendChild(script)
+    return () => { document.body.removeChild(script) }
+  }, [])
+
+  useEffect(() => {
+    document.body.style.overflow = activeModal ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [activeModal])
+
+  function handleJoin() {
+    if (!selected) { setError('Please select an option above first.'); return }
     setError('')
-    setSubmitted(true)
+    setActiveModal(selected)
   }
 
   const benefits = [
@@ -119,78 +128,54 @@ export default function App() {
             </ul>
           </div>
 
-          {/* Right: Form Card */}
+          {/* Right: Card */}
           <div className="waitlist-card">
-            {!submitted ? (
-              <>
-                <div className="card-top">
-                  <span className="card-badge">Free · No commitment</span>
-                  <h3>Be Among the First to<br/>Experience Mindova</h3>
-                  <p>Enter your email and join the waitlist to get notified at launch.</p>
+            <div className="card-top">
+              <span className="card-badge">Free · No commitment</span>
+              <h3>Be Among the First to<br/>Experience Mindova</h3>
+              <p>Select who you are, then join the waitlist.</p>
+            </div>
+
+            <div className="segment-divider">
+              <span /><span className="seg-divider-label">I am a…</span><span />
+            </div>
+
+            <div className="segment-group">
+              <button
+                type="button"
+                className={`segment-btn ${selected === 'services' ? 'active' : ''}`}
+                onClick={() => { setSelected('services'); setError('') }}
+              >
+                <span className="seg-icon">🏥</span>
+                <div>
+                  <strong>I'm Looking for Services</strong>
+                  <span>Healthcare, wellness &amp; support</span>
                 </div>
+                <span className="seg-check" />
+              </button>
 
-                {/* Email form + main CTA */}
-                <form className="waitlist-form" onSubmit={handleSubmit} noValidate>
-                  <input
-                    type="email"
-                    placeholder="Enter your email address"
-                    value={email}
-                    onChange={(e) => { setEmail(e.target.value); setError('') }}
-                    className="email-input"
-                  />
-                  <button type="submit" className="submit-btn">
-                    Join the Waitlist Today
-                    <ArrowRight />
-                  </button>
-                </form>
-
-                {/* Segmentation - below the main CTA */}
-                <div className="segment-divider">
-                  <span /><span className="seg-divider-label">I am a…</span><span />
+              <button
+                type="button"
+                className={`segment-btn ${selected === 'provider' ? 'active' : ''}`}
+                onClick={() => { setSelected('provider'); setError('') }}
+              >
+                <span className="seg-icon">🤝</span>
+                <div>
+                  <strong>I'm a Provider / Partner</strong>
+                  <span>Partnerships &amp; referrals</span>
                 </div>
+                <span className="seg-check" />
+              </button>
+            </div>
 
-                <div className="segment-group">
-                  <button
-                    type="button"
-                    className={`segment-btn ${selected === 'services' ? 'active' : ''}`}
-                    onClick={() => { setSelected('services'); setError('') }}
-                  >
-                    <span className="seg-icon">🏥</span>
-                    <div>
-                      <strong>I'm Looking for Services</strong>
-                      <span>Healthcare, wellness &amp; support</span>
-                    </div>
-                    <span className="seg-check" />
-                  </button>
+            {error && <p className="form-error">{error}</p>}
 
-                  <button
-                    type="button"
-                    className={`segment-btn ${selected === 'provider' ? 'active' : ''}`}
-                    onClick={() => { setSelected('provider'); setError('') }}
-                  >
-                    <span className="seg-icon">🤝</span>
-                    <div>
-                      <strong>I'm a Provider / Partner</strong>
-                      <span>Partnerships &amp; referrals</span>
-                    </div>
-                    <span className="seg-check" />
-                  </button>
-                </div>
+            <button className="submit-btn" onClick={handleJoin}>
+              Join the Waitlist Today
+              <ArrowRight />
+            </button>
 
-                {error && <p className="form-error">{error}</p>}
-                <p className="form-note">We respect your privacy. No spam, ever.</p>
-              </>
-            ) : (
-              <div className="success-state">
-                <div className="success-icon">✓</div>
-                <h3>You're on the list!</h3>
-                <p>
-                  Thank you for joining{selected === 'provider' ? ' as a Provider / Partner' : ' as someone looking for Services'}.
-                  We'll reach out to <strong>{email}</strong> with early access details.
-                </p>
-                <p className="success-note">Keep an eye on your inbox - great things are coming.</p>
-              </div>
-            )}
+            <p className="form-note">We respect your privacy. No spam, ever.</p>
           </div>
 
         </div>
@@ -208,6 +193,60 @@ export default function App() {
           </p>
         </div>
       </footer>
+
+      {/* ── MODAL ──────────────────────────────── */}
+      {activeModal && (
+        <div className="modal-overlay" onClick={() => setActiveModal(null)}>
+          <div className="modal-box" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <span className="modal-title">
+                {activeModal === 'services' ? '🏥 Services Waitlist' : '🤝 Provider & Partner Application'}
+              </span>
+              <button className="modal-close" onClick={() => setActiveModal(null)}>✕</button>
+            </div>
+
+            <div className="modal-iframe-wrap">
+              {activeModal === 'services' ? (
+                <iframe
+                  src="https://link.webtechs.dev/widget/form/DJhjfniFpv8PsM7KZ79l"
+                  style={{ width: '100%', height: '857px', border: 'none', borderRadius: '8px' }}
+                  id="inline-DJhjfniFpv8PsM7KZ79l"
+                  data-layout="{'id':'INLINE'}"
+                  data-trigger-type="alwaysShow"
+                  data-trigger-value=""
+                  data-activation-type="alwaysActivated"
+                  data-activation-value=""
+                  data-deactivation-type="neverDeactivate"
+                  data-deactivation-value=""
+                  data-form-name="Mindova Holdings Services Waitlist"
+                  data-height="857"
+                  data-layout-iframe-id="inline-DJhjfniFpv8PsM7KZ79l"
+                  data-form-id="DJhjfniFpv8PsM7KZ79l"
+                  title="Mindova Holdings Services Waitlist"
+                />
+              ) : (
+                <iframe
+                  src="https://link.webtechs.dev/widget/form/mzTMx1TwnQcZkf7w7hKZ"
+                  style={{ width: '100%', height: '1304px', border: 'none', borderRadius: '8px' }}
+                  id="inline-mzTMx1TwnQcZkf7w7hKZ"
+                  data-layout="{'id':'INLINE'}"
+                  data-trigger-type="alwaysShow"
+                  data-trigger-value=""
+                  data-activation-type="alwaysActivated"
+                  data-activation-value=""
+                  data-deactivation-type="neverDeactivate"
+                  data-deactivation-value=""
+                  data-form-name="Mindova Holdings Provider & Partner Application"
+                  data-height="1304"
+                  data-layout-iframe-id="inline-mzTMx1TwnQcZkf7w7hKZ"
+                  data-form-id="mzTMx1TwnQcZkf7w7hKZ"
+                  title="Mindova Holdings Provider & Partner Application"
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   )
