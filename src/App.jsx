@@ -90,10 +90,16 @@ export default function App() {
             and referrals - <strong>Mindova is designed for you.</strong>
           </p>
 
-          <a href="#waitlist" className="hero-cta">
-            Join the Waitlist
-            <ArrowRight />
-          </a>
+          <div className="hero-cta-group">
+            <a href="#waitlist" className="hero-cta">
+              Join the Waitlist
+              <ArrowRight />
+            </a>
+            <a href="#promo" className="hero-cta-outline">
+              Get Promo
+              <ArrowRight />
+            </a>
+          </div>
         </div>
       </section>
 
@@ -178,6 +184,53 @@ export default function App() {
             <p className="form-note">We respect your privacy. No spam, ever.</p>
           </div>
 
+        </div>
+      </section>
+
+      {/* ── PROMO SECTION ──────────────────────── */}
+      <div className="section-divider">
+        <span />
+        <span className="divider-label divider-label--bright">Featured Opportunity</span>
+        <span />
+      </div>
+
+      <section className="promo-section" id="promo">
+        <div className="promo-inner">
+          <h2 className="promo-section-title">Community Support Preferred Partner Enrollment</h2>
+
+          <div className="promo-card">
+
+            <div className="promo-card-header">
+              <span className="promo-badge">★ &nbsp;Limited Enrollment&nbsp; ★</span>
+              <h3 className="promo-card-title">Community Support Preferred Partner Program</h3>
+              <p className="promo-card-sub">In Partnership with the Ferguson Foundation</p>
+            </div>
+
+            <p className="promo-how-it-works">
+              <strong>How It Works:</strong> Donate 6 hours of therapy sessions to the Ferguson Foundation — a Houston-based nonprofit providing free mental health resources to communities in need. In return, Mindova Holdings will waive your onboarding and platform fees during your first months on the platform.
+            </p>
+
+            <ul className="promo-list">
+              <li>Donate 6 hours of in-kind therapy sessions to the Ferguson Foundation</li>
+              <li>Begin your Mindova screening and onboarding process immediately — no waiting</li>
+              <li>Receive platform fee waiver for your initial onboarding period</li>
+              <li>Get full access to Mindova's scheduling, marketing, credentialing and client referral systems from day one</li>
+              <li>Be listed as a Mindova Community Partner — a trusted provider making a real difference</li>
+            </ul>
+
+            <div className="promo-footer-block">
+              <p>
+                <span className="promo-highlight">This is a limited enrollment opportunity.</span> Spots are reserved for providers aligned with our mission of accessible, compassionate care.
+              </p>
+              <p className="promo-contact-label">To schedule your Partner Consult &amp; begin enrollment, send your resume to:</p>
+              <div className="promo-emails">
+                <a href="mailto:enroll@mindovaholdings.com">enroll@mindovaholdings.com</a>
+                <a href="mailto:info@mindovaholdings.com">info@mindovaholdings.com</a>
+                <a href="mailto:info@ferguson-foundation.com">info@ferguson-foundation.com</a>
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
