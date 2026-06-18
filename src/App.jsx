@@ -167,7 +167,7 @@ export default function App() {
               >
                 <span className="seg-icon">🤝</span>
                 <div>
-                  <strong>I am a Non-Clinical/Provider.</strong>
+                  <strong>I'm a Non-Clinical/Provider.</strong>
                   <span>Partnerships &amp; referrals</span>
                 </div>
                 <span className="seg-check" />
